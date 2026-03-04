@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Love Challenge ✨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="stars"></canvas>
+    <img src="images/gattoSospettoso.jpg" id="floating-image" class="floating-bg">
+
+    <div id="phase-login" class="lock-container">
+        <h1 class="title-love">Area SUPER riservata</h1>
+        <p class="subtitle">Inserisci il PIN per accedere ai test di idoneità.</p>
+        <div class="input-wrapper">
+            <input type="password" id="pin-input" inputmode="numeric" placeholder="••••••" maxlength="6">
+            <div class="input-underline"></div>
+        </div>
+        <button onclick="checkPin()" class="btn-unlock">Accedi</button>
+        <p id="error-pin" class="hidden msg-red">Pin errato. Imbarazzante... </p>
+    </div>
+
+    <div id="phase-home" class="hidden lock-container">
+        <h1 class="title-love">Centro controlli di identità</h1>
+        <p class="subtitle">Soltanto la vera Iaia può superare questo sofisticato sistema di sicurezza e scoprire il suo regalo</p>
+        
+        <div class="game-grid">
+            <div class="game-card" id="card-1" onclick="startQuiz()">
+                <div class="icon">❓</div>
+                <span>Il Quizzone</span>
+                <div class="status" id="stat-1">Disponibile</div>
+            </div>
+            
+            <div class="game-card locked" id="card-2">
+                <div class="icon">🔒</div>
+                <span>Real or Fake</span>
+            <div id="stat-2" class="status">Bloccato</div> </div>
+
+            <div class="game-card locked" id="card-3">
+                <div class="icon">🔒</div>
+                <span>Verifica del volto</span>
+                <div class="status">Bloccato</div>
+            </div>
+
+            <div class="game-card locked" id="card-4">
+                <div class="icon">🔒</div>
+                <span>Il gran Finale</span>
+                <div class="status">Bloccato</div>
+            </div>
+        </div>
+
+        <button id="btn-final-gift" class="btn-unlock hidden" style="background: gold; color: black;" onclick="showGift()">🎁 RITIRA REGALO</button>
+    </div>
+
+    <div id="phase-quiz" class="hidden lock-container">
+        <h2 id="question-text" class="title-love" style="font-size: 1.8rem;">Domanda</h2>
+        <div id="options-container"></div>
+        <p id="quiz-feedback" class="hidden msg-red">Sbagliato! Ritenta...</p>
+    </div>
+
+<div id="phase-memories" class="hidden lock-container">
+        <h2 class="title-love" style="font-size: 1.5rem;">Riconosci il vero ricordo?</h2>
+        <p id="memory-subtitle" class="subtitle">Round 1 di 3</p> 
+        <div class="photo-grid">
+            <img id="img-choice-1" src="" class="photo-choice" onclick="checkMemory(1)">
+            <img id="img-choice-2" src="" class="photo-choice" onclick="checkMemory(2)">
+        </div>
+        <p id="memory-feedback" class="hidden msg-red">Ma come?! Quella è palesemente finta!</p>
+    </div>
+
+    <div id="phase-recon" class="hidden lock-container">
+        <h2 class="title-love" style="font-size: 1.5rem;">Verifica Biometrica</h2>
+        <p class="subtitle">Inquadra il volto per sbloccare l'ultimo controllo.</p>
+        
+        <div id="camera-box" class="camera-ui">
+            <div class="scan-line"></div>
+            <div class="camera-placeholder">
+                <video id="webcam-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none;"></video>
+                <span id="recon-status">Inizializzazione...</span>
+            </div>
+        </div>
+
+        <button id="btn-scan" onclick="startFakeScan()" class="btn-unlock">AVVIA SCANSIONE</button>
+        
+        <div id="funny-result" class="hidden">
+            <p class="msg-red" style="font-weight: bold;">⚠️ IDENTITÀ CONFERMATA!</p>
+            <img src="images/monkey.jpg" class="photo-choice" style="width: 200px; height: auto; border: 3px solid gold;">
+            <p class="subtitle" style="margin-top: 10px;">Corrispondenza: 99.9% (Puzzona rilevata)</p>
+            <button onclick="finishRecon()" class="btn-unlock">SONO PROPRIO IO</button>
+        </div>
+    </div>
+
+</div>
+<div id="phase-clicker" class="hidden lock-container">
+    <h2 class="title-love" style="font-size: 1.2rem; line-height: 1.4;">
+        Va bene lo ammetto, ti ho riconosciuta già dal primo controllo, mi sto solo divertendo con te... 
+    </h2>
+    <p class="subtitle" style="margin-top: 15px;">
+        Perché non concludere alla grande? Premi questo tasto 150 volte per scoprire il tuo regalo 🥰
+    </p>
+
+    <div id="counter-display" style="font-size: 3rem; color: gold; font-weight: bold; margin: 20px 0;">0</div>
+    
+    <button id="btn-spam" onclick="handleSpamClick()" class="btn-unlock" style="background: #ff0000; height: 80px; font-size: 1.2rem;">
+        CLICCA QUI!
+    </button>
+
+    <p id="clicker-msg" class="subtitle" style="font-style: italic; font-size: 0.8rem; margin-top: 10px; min-height: 20px;"></p>
+</div>
+
+    <div id="phase-gift" class="hidden present-container japan-theme">
+    <div id="gift-curtain" onclick="revealJapan()">
+        <div class="glow-text">TOCCA PER APRIRE</div>
+        <div class="box-icon">🎁</div>
+    </div>
+
+    <div id="japan-reveal" class="hidden">
+        <h1 class="title-reveal">CHE NE DICI DI UN VIAGGETTO IN...</h1>
+        <div class="japan-content">
+            <h2 class="destination-name">GIAPPONE 🇯🇵</h2>
+            <div class="cherry-blossom-container"></div>
+            <p class="love-message">Adesso chi lo dice a tua madre 😭</p>
+            <img src="images/giap.jpg" class="japan-img" alt="Monte Fuji">
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
